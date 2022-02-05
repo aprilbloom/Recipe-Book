@@ -7,7 +7,7 @@
       *ngIf="selectedRecipe; else infoText"
       [recipe]="selectedRecipe"></app-recipe-detail>
     <ng-template #infoText>
-      <p>Please select a Recipe!</p>
+      <app-recipe-start></app-recipe-start>
     </ng-template>
   </div>
 </div>

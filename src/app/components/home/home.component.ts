@@ -6,14 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  loadedFeature = 'recipe';
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  onNavigate(feature: string){
-    this.loadedFeature = feature;
-  }
+
 }

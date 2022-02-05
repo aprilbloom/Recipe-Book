@@ -23,7 +23,7 @@ export class ShoppingListComponent implements OnInit {
       );
   }
 
-  onIngredientAdded(ingredient: Ingredient){
-    this.slService.onIngredientAdded(ingredient);
-  }
+  // onIngredientAdded(ingredient: Ingredient){
+  //   this.slService.onIngredientAdded(ingredient);
+  // }
 }
