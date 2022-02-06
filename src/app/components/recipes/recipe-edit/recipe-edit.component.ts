@@ -11,7 +11,7 @@ import { Recipe } from '../recipe.model';
 })
 export class RecipeEditComponent implements OnInit {
   id: number;
-  editMode: boolean;
+  editMode: boolean = false;
   recipeForm: FormGroup;
 
   constructor(private route: ActivatedRoute,
@@ -97,5 +97,7 @@ export class RecipeEditComponent implements OnInit {
       }else {
         this.recipeService.addRecipe(this.recipeForm.value);
       }
+
+      this.onCancel();
   }
 }

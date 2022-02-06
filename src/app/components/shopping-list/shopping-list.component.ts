@@ -23,6 +23,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
           this.ingredients = ingredients;
         }
       );
+      this.ingredients = this.slService.getIngredients();
   }
 
   ngOnDestroy(): void {
@@ -32,8 +33,4 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   onEditItem(index: number){
     this.slService.startedEditing.next(index);
   }
-
-  // onIngredientAdded(ingredient: Ingredient){
-  //   this.slService.onIngredientAdded(ingredient);
-  // }
 }
