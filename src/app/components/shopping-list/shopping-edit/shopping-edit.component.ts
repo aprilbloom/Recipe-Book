@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/shared/ingredient.model';
@@ -60,3 +60,10 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     this.onClear();
   }
 }
+
+// As of Angular 8+, there's a new way of clearing all items in a FormArray.
+
+// (<FormArray>this.recipeForm.get('ingredients')).clear();
+// The clear() method automatically loops through all registered FormControls (or FormGroups) in the FormArray and removes them.
+
+// It's like manually creating a loop and calling removeAt() for every item.
