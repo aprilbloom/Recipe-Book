@@ -77,7 +77,7 @@ export class DataStorageService {
           }
         );
       }),
-      map(responseData => {
+    map(responseData => {
         const ingredientsArray = [];
         for (const ingredients in responseData){
           ingredientsArray.push({...responseData[ingredients]});
