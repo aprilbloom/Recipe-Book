@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { exhaustMap, map, take, tap } from 'rxjs/operators';
 import { RecipeService } from '../components/recipes/recipe.service';
 import { Recipe } from '../components/recipes/recipe.model';
 import { ShoppingListService } from '../components/shopping-list/shopping-list.service';
 import { Ingredient } from './ingredient.model';
 import { of } from 'rxjs';
+import { AuthService } from '../components/auth/auth.service';
 
 
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
   constructor(private http: HttpClient, private recipeService: RecipeService,
-              private slService: ShoppingListService) {}
+              private slService: ShoppingListService,
+              private authService: AuthService) {}
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
@@ -40,12 +42,17 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.http
-      .get<Recipe[]>(
-        'https://leah-recipe-book-default-rtdb.firebaseio.com/recipes.json'
-      )
-      .pipe(
-        map(recipes => {
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap(user => {
+        return this.http.get<Recipe[]>(
+          'https://leah-recipe-book-default-rtdb.firebaseio.com/recipes.json',
+          {
+            params: new HttpParams().set('auth', user.token)
+          }
+        );
+      }),
+      map(recipes => {
           return recipes.map(recipe => {
             return {
               ...recipe,
@@ -60,9 +67,17 @@ export class DataStorageService {
   }
 
   fetchIngredients() {
-   return this.http
-      .get<Ingredient[]>('https://leah-recipe-book-default-rtdb.firebaseio.com/ingredients.json')
-      .pipe(map(responseData => {
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap(user => {
+        return this.http.get<Ingredient[]>(
+          'https://leah-recipe-book-default-rtdb.firebaseio.com/ingredients.json',
+          {
+            params: new HttpParams().set('auth', user.token)
+          }
+        );
+      }),
+      map(responseData => {
         const ingredientsArray = [];
         for (const ingredients in responseData){
           ingredientsArray.push({...responseData[ingredients]});

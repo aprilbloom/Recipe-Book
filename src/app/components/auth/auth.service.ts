@@ -1,45 +1,47 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { catchError, Subject, tap } from "rxjs";
-import { throwError } from "rxjs";
-import { User } from "./user.model";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, BehaviorSubject } from 'rxjs';
+
+import { User } from './user.model';
+import { Router } from '@angular/router';
 
 export interface AuthResponseData {
-  idToken: string,
-  email: string,
-  refreshToken: string,
-  expiresIn: string,
-  localId: string,
-  registered? : boolean
+  kind: string;
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+  registered?: boolean;
 }
 
-
-@Injectable ({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new Subject<User>();
+  user = new BehaviorSubject<User>(null);
 
-  constructor( private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-  signup(email: string, password: string){
-      return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB6EIoQclUK0tpv_2TrNNRWIXWTalYe2dw',
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
-      }
-    )
-    .pipe(
-      catchError(this.handleError),
-      tap(resData => {
-        this.handleAuthentication(
-          resData.email,
-          resData.localId,
-          resData.idToken,
-          +resData.expiresIn
-        );
-      })
-    );
-}
+  signup(email: string, password: string) {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB6EIoQclUK0tpv_2TrNNRWIXWTalYe2dw',
+        {
+          email: email,
+          password: password,
+          returnSecureToken: true
+        }
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          );
+        })
+      );
+  }
 
   login(email: string, password: string) {
     return this.http
@@ -51,18 +53,18 @@ export class AuthService {
           returnSecureToken: true
         }
       )
-        .pipe(
-          catchError(this.handleError),
-          tap(resData => {
-            this.handleAuthentication(
-              resData.email,
-              resData.localId,
-              resData.idToken,
-              +resData.expiresIn
-            );
-          })
-        );
-    }
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          );
+        })
+      );
+  }
 
   private handleAuthentication(
     email: string,
@@ -92,5 +94,10 @@ export class AuthService {
         break;
     }
     return throwError(errorMessage);
+  }
+
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
   }
 }
