@@ -27,12 +27,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isAuthenticated = !!user;
       console.log(!user);
       console.log(!!user);
+
+      this.onFetchData();
     });
   }
 
   onSaveData() {
     if (this.recipeService.recipesChanged){
       this.dataStorageService.storeRecipes()}
+
     if (this.slService.ingredientChanged){
       this.dataStorageService.storeIngredients();}
   }

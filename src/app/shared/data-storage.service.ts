@@ -42,17 +42,12 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.authService.user.pipe(
-      take(1),
-      exhaustMap(user => {
-        return this.http.get<Recipe[]>(
-          'https://leah-recipe-book-default-rtdb.firebaseio.com/recipes.json',
-          {
-            params: new HttpParams().set('auth', user.token)
-          }
-        );
-      }),
-      map(recipes => {
+    return this.http
+      .get<Recipe[]>(
+        'https://leah-recipe-book-default-rtdb.firebaseio.com/recipes.json'
+      )
+      .pipe(
+        map(recipes => {
           return recipes.map(recipe => {
             return {
               ...recipe,
@@ -63,21 +58,16 @@ export class DataStorageService {
         tap(recipes => {
           this.recipeService.setRecipes(recipes);
         })
-      )
+      );
   }
 
   fetchIngredients() {
-    return this.authService.user.pipe(
-      take(1),
-      exhaustMap(user => {
-        return this.http.get<Ingredient[]>(
-          'https://leah-recipe-book-default-rtdb.firebaseio.com/ingredients.json',
-          {
-            params: new HttpParams().set('auth', user.token)
-          }
-        );
-      }),
-    map(responseData => {
+    return this.http
+      .get<Ingredient[]>(
+        'https://leah-recipe-book-default-rtdb.firebaseio.com/ingredients.json',
+      )
+      .pipe(
+        map(responseData => {
         const ingredientsArray = [];
         for (const ingredients in responseData){
           ingredientsArray.push({...responseData[ingredients]});
@@ -85,6 +75,29 @@ export class DataStorageService {
         this.slService.setIngredients(responseData);
         return responseData;
       }
-      ))
+      ));
   }
+
+
+  // fetchIngredients() {
+  //   return this.authService.user.pipe(
+  //     take(1),
+  //     exhaustMap(user => {
+  //       return this.http.get<Ingredient[]>(
+  //         'https://leah-recipe-book-default-rtdb.firebaseio.com/ingredients.json',
+  //         {
+  //           params: new HttpParams().set('auth', user.token)
+  //         }
+  //       );
+  //     }),
+  //   map(responseData => {
+  //       const ingredientsArray = [];
+  //       for (const ingredients in responseData){
+  //         ingredientsArray.push({...responseData[ingredients]});
+  //       }
+  //       this.slService.setIngredients(responseData);
+  //       return responseData;
+  //     }
+  //     ))
+  // }
 }

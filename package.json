@@ -1,5 +1,5 @@
 {
-  "name": "my-firs-app",
+  "name": "my-first-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "-": "^0.0.1",
     "@angular/animations": "~13.2.0",
     "@angular/common": "~13.2.0",
     "@angular/compiler": "~13.2.0",
@@ -19,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "bootstrap": "^3.4.1",
+    "firebase-tools": "^10.1.5",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
